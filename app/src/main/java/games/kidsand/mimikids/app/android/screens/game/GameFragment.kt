@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.guesstheword.screens.game
+package games.kidsand.mimikids.app.android.screens.game
 
 import android.os.Build
 import android.os.Bundle
@@ -29,8 +29,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
-import com.example.android.guesstheword.R
-import com.example.android.guesstheword.databinding.GameFragmentBinding
+import games.kidsand.mimikids.app.android.R
+import games.kidsand.mimikids.app.android.databinding.GameFragmentBinding
+import games.kidsand.mimikids.app.android.screens.game.GameFragmentDirections
 
 /**
  * Fragment where the game is played
@@ -74,7 +75,7 @@ class GameFragment : Fragment() {
         })
 
         // Buzzes when triggered with different buzz events
-        viewModel.eventBuzz.observe(viewLifecycleOwner, Observer { buzzType ->
+        viewModel.eventBuzz.observe(viewLifecycleOwner, { buzzType ->
             if (buzzType != GameViewModel.BuzzType.NO_BUZZ) {
                 buzz(buzzType.pattern)
                 viewModel.onBuzzComplete()

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.guesstheword.screens.score
+package games.kidsand.mimikids.app.android.screens.score
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

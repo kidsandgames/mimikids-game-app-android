@@ -22,14 +22,14 @@
 
         <variable
             name="gameViewModel"
-            type="com.example.android.guesstheword.screens.game.GameViewModel" />
+            type="games.kidsand.mimikids.app.android.screens.game.GameViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/game_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".screens.game.GameFragment">
+        tools:context="games.kidsand.mimikids.app.android.screens.game.GameFragment">
 
         <TextView
             android:id="@+id/word_is_text"

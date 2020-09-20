@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package com.example.android.guesstheword
+package games.kidsand.mimikids.app.android.screens.score
 
-import org.junit.Assert.assertEquals
-import org.junit.Test
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+class ScoreViewModelFactory(private val finalScore: Int) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(ScoreViewModel::class.java)) {
+            return ScoreViewModel(finalScore) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

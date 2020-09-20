@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package com.example.android.guesstheword
+package games.kidsand.mimikids.app
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 /**
- * Creates an Activity that hosts all of the fragments in the app
+ * Example local unit test, which will execute on the development machine (host).
+ *
+ * See [testing documentation](http://d.android.com/tools/testing).
  */
-class MainActivity : AppCompatActivity() {
+class ExampleUnitTest {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+    @Test
+    fun addition_isCorrect() {
+        assertEquals(4, 2 + 2)
     }
-
 }

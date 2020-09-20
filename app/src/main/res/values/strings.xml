@@ -15,7 +15,7 @@
   -->
 
 <resources>
-    <string name="app_name">Guess the Word</string>
+    <string name="app_name">MimiKids</string>
     <string name="skip">Skip</string>
     <string name="play_again">Play Again</string>
     <string name="you_scored">You Scored</string>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.guesstheword.screens.game
+package games.kidsand.mimikids.app.android.screens.game
 
 import android.os.CountDownTimer
 import android.text.format.DateUtils

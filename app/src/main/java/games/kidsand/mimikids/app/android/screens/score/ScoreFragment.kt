@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.guesstheword.screens.score
+package games.kidsand.mimikids.app.android.screens.score
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,12 +22,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.android.guesstheword.R
-import com.example.android.guesstheword.databinding.ScoreFragmentBinding
+import games.kidsand.mimikids.app.android.R
+import games.kidsand.mimikids.app.android.databinding.ScoreFragmentBinding
 
 /**
  * Fragment where the final score is shown, after the game is over
@@ -64,7 +63,7 @@ class ScoreFragment : Fragment() {
         binding.setLifecycleOwner(this)
 
         // Navigates back to title when button is pressed
-        viewModel.eventPlayAgain.observe(this, Observer { playAgain ->
+        viewModel.eventPlayAgain.observe(viewLifecycleOwner, { playAgain ->
             if (playAgain) {
                 findNavController().navigate(ScoreFragmentDirections.actionRestart())
                 viewModel.onPlayAgainComplete()
