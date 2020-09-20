@@ -27,8 +27,10 @@ import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import games.kidsand.mimikids.app.android.databinding.GameFragmentBinding
 import games.kidsand.mimikids.app.android.util.getViewModelFactory
+import games.kidsand.mimikids.app.android.util.setupSnackbar
 
 /**
  * Fragment where the game is played
@@ -88,5 +90,10 @@ class GameFragment : Fragment() {
                 buzzer.vibrate(pattern, -1)
             }
         }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        view?.setupSnackbar(viewLifecycleOwner, viewModel.snackbarText, Snackbar.LENGTH_LONG)
     }
 }

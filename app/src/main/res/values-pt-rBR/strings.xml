@@ -11,4 +11,5 @@
     <string name="word_is">A palavra é…</string>
     <string name="score_format">Pontuação atual: %d</string>
     <string name="wait">Aguarde…</string>
+    <string name="loading_words_error">Desculpe, algo deu errado enquanto carregávamos as palavras</string>
 </resources>

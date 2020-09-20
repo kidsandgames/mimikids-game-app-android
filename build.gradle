@@ -45,4 +45,5 @@ ext {
     retrofit_version = '2.9.0'
     moshi_version = '1.9.3'
     timber_version = '4.7.1'
+    espresso_version = '3.2.0'
 }

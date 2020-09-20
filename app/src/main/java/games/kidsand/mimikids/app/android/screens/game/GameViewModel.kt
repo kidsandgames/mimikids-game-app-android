@@ -18,10 +18,13 @@ package games.kidsand.mimikids.app.android.screens.game
 
 import android.os.CountDownTimer
 import android.text.format.DateUtils
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import games.kidsand.mimikids.app.android.Event
+import games.kidsand.mimikids.app.android.R
 import games.kidsand.mimikids.app.android.data.model.GuessWord
 import games.kidsand.mimikids.app.android.data.source.remote.GameApi
 import retrofit2.Call
@@ -101,6 +104,9 @@ class GameViewModel : ViewModel() {
     val eventBuzz: LiveData<BuzzType>
         get() = _eventBuzz
 
+    private val _snackbarText = MutableLiveData<Event<Int>>()
+    val snackbarText: LiveData<Event<Int>> = _snackbarText
+
     init {
         _score.value = 0
 
@@ -134,6 +140,7 @@ class GameViewModel : ViewModel() {
 
             override fun onFailure(call: Call<GuessWord>, error: Throwable) {
                 Timber.e("Failure loading guess words: ${error.message}")
+                showSnackbarMessage(R.string.loading_words_error)
             }
         })
     }
@@ -183,6 +190,10 @@ class GameViewModel : ViewModel() {
 
     fun onBuzzComplete() {
         _eventBuzz.value = BuzzType.NO_BUZZ
+    }
+
+    private fun showSnackbarMessage(@StringRes message: Int) {
+        _snackbarText.value = Event(message)
     }
 
     override fun onCleared() {
