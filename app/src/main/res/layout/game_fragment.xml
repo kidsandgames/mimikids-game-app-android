@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
             android:fontFamily="sans-serif"
-            android:text="@{@string/quote_format(gameViewModel.word)}"
+            android:text="@{gameViewModel.word != null ? @string/quote_format(gameViewModel.word) : @string/wait }"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/black_text_color"
             android:textSize="34sp"

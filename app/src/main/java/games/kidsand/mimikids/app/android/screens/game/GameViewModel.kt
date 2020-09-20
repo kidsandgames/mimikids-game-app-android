@@ -22,6 +22,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import games.kidsand.mimikids.app.android.data.model.GuessWord
+import games.kidsand.mimikids.app.android.data.source.remote.GameApi
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import timber.log.Timber
+import java.util.*
 
 private val CORRECT_BUZZ_PATTERN = longArrayOf(100, 100, 100, 100, 100, 100)
 private val PANIC_BUZZ_PATTERN = longArrayOf(0, 200)
@@ -81,7 +88,6 @@ class GameViewModel : ViewModel() {
     val score: LiveData<Int>
         get() = _score
 
-
     // The list of words - the front of the list is the next word to guess
     private lateinit var wordList: MutableList<String>
 
@@ -96,8 +102,6 @@ class GameViewModel : ViewModel() {
         get() = _eventBuzz
 
     init {
-        resetList()
-        nextWord()
         _score.value = 0
 
         // Creates a timer which triggers the end of the game when it finishes
@@ -117,6 +121,26 @@ class GameViewModel : ViewModel() {
             }
         }
 
+        loadWords()
+    }
+
+    private fun loadWords() {
+        val locale = Locale.getDefault().toString()
+        GameApi.retrofitService.guessThings(locale).enqueue(object : Callback<GuessWord> {
+            override fun onResponse(call: Call<GuessWord>, response: Response<GuessWord>) {
+                wordList = response.body()?.things?.toMutableList() ?: mutableListOf()
+                start()
+            }
+
+            override fun onFailure(call: Call<GuessWord>, error: Throwable) {
+                Timber.e("Failure loading guess words: ${error.message}")
+            }
+        })
+    }
+
+    private fun start() {
+        resetList()
+        nextWord()
         timer.start()
     }
 
@@ -124,29 +148,6 @@ class GameViewModel : ViewModel() {
      * Resets the list of words and randomizes the order
      */
     private fun resetList() {
-        wordList = mutableListOf(
-                "queen",
-                "hospital",
-                "basketball",
-                "cat",
-                "change",
-                "snail",
-                "soup",
-                "calendar",
-                "sad",
-                "desk",
-                "guitar",
-                "home",
-                "railway",
-                "zebra",
-                "jelly",
-                "car",
-                "crow",
-                "trade",
-                "bag",
-                "roll",
-                "bubble"
-        )
         wordList.shuffle()
     }
 

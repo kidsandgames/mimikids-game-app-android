@@ -20,56 +20,45 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import games.kidsand.mimikids.app.android.R
 import games.kidsand.mimikids.app.android.databinding.ScoreFragmentBinding
+import games.kidsand.mimikids.app.android.util.getViewModelFactory
 
 /**
  * Fragment where the final score is shown, after the game is over
  */
 class ScoreFragment : Fragment() {
 
-    private lateinit var viewModel: ScoreViewModel
-    private lateinit var viewModelFactory: ScoreViewModelFactory
+    private val viewModel: ScoreViewModel by viewModels { getViewModelFactory() }
+
+    private val args by navArgs<ScoreFragmentArgs>()
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View? =
+            ScoreFragmentBinding.inflate(inflater).apply {
+                scoreViewModel = viewModel
 
-        // Inflate view and obtain an instance of the binding class.
-        val binding: ScoreFragmentBinding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.score_fragment,
-                container,
-                false
-        )
+                // Specify the current activity as the lifecycle owner of the binding. This is used so that
+                // the binding can observe LiveData updates
+                lifecycleOwner = viewLifecycleOwner
 
-        val scoreFragmentArgs by navArgs<ScoreFragmentArgs>()
+                // Navigates back to title when button is pressed
+                viewModel.eventPlayAgain.observe(viewLifecycleOwner, { playAgain ->
+                    if (playAgain) {
+                        findNavController().navigate(ScoreFragmentDirections.actionRestart())
+                        viewModel.onPlayAgainComplete()
+                    }
+                })
+            }.root
 
-        viewModelFactory = ScoreViewModelFactory(scoreFragmentArgs.score)
-        viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(ScoreViewModel::class.java)
-
-        binding.scoreViewModel = viewModel
-
-        // Specify the current activity as the lifecycle owner of the binding. This is used so that
-        // the binding can observe LiveData updates
-        binding.setLifecycleOwner(this)
-
-        // Navigates back to title when button is pressed
-        viewModel.eventPlayAgain.observe(viewLifecycleOwner, { playAgain ->
-            if (playAgain) {
-                findNavController().navigate(ScoreFragmentDirections.actionRestart())
-                viewModel.onPlayAgainComplete()
-            }
-        })
-
-        return binding.root
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel.initialize(args.score)
     }
 }

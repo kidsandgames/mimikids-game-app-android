@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package games.kidsand.mimikids.app.android.util
 
-package games.kidsand.mimikids.app.android.screens.score
+import androidx.fragment.app.Fragment
+import games.kidsand.mimikids.app.android.ViewModelFactory
 
-
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-
-class ScoreViewModelFactory(private val finalScore: Int) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(ScoreViewModel::class.java)) {
-            return ScoreViewModel(finalScore) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
+fun Fragment.getViewModelFactory(): ViewModelFactory {
+    return ViewModelFactory(this)
 }

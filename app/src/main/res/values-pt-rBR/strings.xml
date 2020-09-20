@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MimiKids</string>
+    <string name="skip">Pular</string>
+    <string name="play_again">Jogar novamente</string>
+    <string name="you_scored">Você pontuou</string>
+    <string name="title_text">advinhe a palavra!</string>
+    <string name="play_button">Jogar</string>
+    <string name="get_ready">Se prepare para</string>
+    <string name="got_it">Consegui</string>
+    <string name="word_is">A palavra é…</string>
+    <string name="score_format">Pontuação atual: %d</string>
+    <string name="wait">Aguarde…</string>
+</resources>
