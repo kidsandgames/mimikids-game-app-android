@@ -21,13 +21,45 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
+    def versionPropsFile = file('version.properties')
+    def versionBuild
+
+    if (versionPropsFile.canRead()) {
+        def versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        versionBuild = versionProps['VERSION_BUILD'].toInteger()
+    } else {
+        throw new FileNotFoundException("Could not read version.properties!")
+    }
+
+    ext.autoIncrementBuildNumber = {
+        if (versionPropsFile.canRead()) {
+            def versionProps = new Properties()
+            versionProps.load(new FileInputStream(versionPropsFile))
+            versionBuild = versionProps['VERSION_BUILD'].toInteger() + 1
+            versionProps['VERSION_BUILD'] = versionBuild.toString()
+            versionProps.store(versionPropsFile.newWriter(), null)
+        } else {
+            throw new FileNotFoundException("Could not read version.properties!")
+        }
+    }
+
     compileSdkVersion 30
+    buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "games.kidsand.mimikids.app.android"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode versionBuild
+        versionName "0.0.1." + versionBuild.toString()
+        setProperty("archivesBaseName", "MimiKids-$versionName")
+    }
+    gradle.taskGraph.whenReady { taskGraph ->
+        if (taskGraph.hasTask(assembleDebug)) {
+            autoIncrementBuildNumber()
+        } else if (taskGraph.hasTask(assembleRelease)) {
+            autoIncrementBuildNumber()
+        }
     }
     buildTypes {
         release {
