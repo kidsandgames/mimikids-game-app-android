@@ -80,11 +80,12 @@ class GameViewModel : ViewModel() {
         DateUtils.formatElapsedTime(time)
     }
 
+    private val originalWords = MutableLiveData<List<String>>(emptyList())
+
     // The current word
     private val _word = MutableLiveData<String>()
     val word: LiveData<String>
         get() = _word
-
 
     // The current score
     private val _score = MutableLiveData<Int>()
@@ -134,7 +135,7 @@ class GameViewModel : ViewModel() {
         val locale = Locale.getDefault().toString()
         GameApi.retrofitService.guessThings(locale).enqueue(object : Callback<GuessWord> {
             override fun onResponse(call: Call<GuessWord>, response: Response<GuessWord>) {
-                wordList = response.body()?.things?.toMutableList() ?: mutableListOf()
+                originalWords.value = response.body()?.things ?: emptyList()
                 start()
             }
 
@@ -155,6 +156,7 @@ class GameViewModel : ViewModel() {
      * Resets the list of words and randomizes the order
      */
     private fun resetList() {
+        wordList = originalWords.value!!.toMutableList()
         wordList.shuffle()
     }
 
