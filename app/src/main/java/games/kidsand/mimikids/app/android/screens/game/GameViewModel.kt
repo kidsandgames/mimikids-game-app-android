@@ -133,9 +133,9 @@ class GameViewModel : ViewModel() {
 
     private fun loadWords() {
         val locale = Locale.getDefault().toString()
-        GameApi.retrofitService.guessThings(locale).enqueue(object : Callback<GuessWord> {
+        GameApi.retrofitService.guess("animals", locale).enqueue(object : Callback<GuessWord> {
             override fun onResponse(call: Call<GuessWord>, response: Response<GuessWord>) {
-                originalWords.value = response.body()?.things ?: emptyList()
+                originalWords.value = response.body()?.words ?: emptyList()
                 start()
             }
 
