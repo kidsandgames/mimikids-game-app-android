@@ -47,6 +47,10 @@
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left"
             app:popUpTo="@+id/title_destination" />
+        <argument
+            android:name="category"
+            app:argType="string"
+            />
     </fragment>
     <fragment
         android:id="@+id/score_destination"
@@ -65,5 +69,9 @@
             android:name="score"
             android:defaultValue="0"
             app:argType="integer" />
+        <argument
+            android:name="category"
+            app:argType="string"
+            />
     </fragment>
 </navigation>

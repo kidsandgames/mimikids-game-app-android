@@ -28,4 +28,5 @@
     <string name="quote_format" translatable="false">\"%s\"</string>
     <string name="score_format">Current Score: %d</string>
     <string name="loading_words_error">Sorry, something went wrong while we was loading words</string>
+    <string name="select_category">What category do you want to play?</string>
 </resources>

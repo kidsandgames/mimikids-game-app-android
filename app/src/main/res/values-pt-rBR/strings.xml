@@ -12,4 +12,5 @@
     <string name="score_format">Pontuação atual: %d</string>
     <string name="wait">Aguarde…</string>
     <string name="loading_words_error">Desculpe, algo deu errado enquanto carregávamos as palavras</string>
+    <string name="select_category">Qual categoria você quer jogar?</string>
 </resources>

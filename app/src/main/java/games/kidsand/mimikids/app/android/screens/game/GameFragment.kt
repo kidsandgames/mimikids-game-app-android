@@ -27,8 +27,10 @@ import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import games.kidsand.mimikids.app.android.databinding.GameFragmentBinding
+import games.kidsand.mimikids.app.android.screens.game.GameFragmentDirections.Companion.actionGameToScore
 import games.kidsand.mimikids.app.android.util.getViewModelFactory
 import games.kidsand.mimikids.app.android.util.setupSnackbar
 
@@ -37,43 +39,53 @@ import games.kidsand.mimikids.app.android.util.setupSnackbar
  */
 class GameFragment : Fragment() {
 
-    private val viewModel by viewModels<GameViewModel> { getViewModelFactory() }
+    private val arguments: GameFragmentArgs by navArgs()
 
-    private lateinit var viewDataBinding: GameFragmentBinding
+    private val gameViewModel by viewModels<GameViewModel> { getViewModelFactory() }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    private lateinit var viewBinding: GameFragmentBinding
 
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
         // Inflate view and obtain an instance of the binding class
-        viewDataBinding = GameFragmentBinding.inflate(inflater)
+        viewBinding = GameFragmentBinding.inflate(inflater)
 
         // Set the viewmodel for databinding - this allows the bound layout access to all of the
         // data in the VieWModel
-        viewDataBinding.gameViewModel = viewModel
+        viewBinding.gameViewModel = gameViewModel
 
         // Specify the current activity as the lifecycle owner of the binding. This is used so that
         // the binding can observe LiveData updates
-        viewDataBinding.lifecycleOwner = viewLifecycleOwner
+        viewBinding.lifecycleOwner = viewLifecycleOwner
 
+        observeUi()
+
+        return viewBinding.root
+    }
+
+    private fun observeUi() {
         // Sets up event listening to navigate the player when the game is finished
-        viewModel.eventGameFinish.observe(viewLifecycleOwner, { isFinished ->
+        gameViewModel.eventGameFinish.observe(viewLifecycleOwner, { isFinished ->
             if (isFinished) {
-                val currentScore = viewModel.score.value ?: 0
-                val action = GameFragmentDirections.actionGameToScore(currentScore)
-                findNavController(this).navigate(action)
-                viewModel.onGameFinishComplete()
+                val currentScore = gameViewModel.score.value ?: 0
+                findNavController(this).navigate(actionGameToScore(
+                        currentScore,
+                        arguments.category
+                ))
+                gameViewModel.onGameFinishComplete()
             }
         })
 
         // Buzzes when triggered with different buzz events
-        viewModel.eventBuzz.observe(viewLifecycleOwner, { buzzType ->
+        gameViewModel.eventBuzz.observe(viewLifecycleOwner, { buzzType ->
             if (buzzType != GameViewModel.BuzzType.NO_BUZZ) {
                 buzz(buzzType.pattern)
-                viewModel.onBuzzComplete()
+                gameViewModel.onBuzzComplete()
             }
         })
-
-        return viewDataBinding.root
     }
 
     /**
@@ -94,6 +106,7 @@ class GameFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        view?.setupSnackbar(viewLifecycleOwner, viewModel.snackbarText, Snackbar.LENGTH_LONG)
+        view?.setupSnackbar(viewLifecycleOwner, gameViewModel.snackbarText, Snackbar.LENGTH_LONG)
+        gameViewModel.start(arguments.category)
     }
 }

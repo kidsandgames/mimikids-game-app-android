@@ -25,6 +25,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import games.kidsand.mimikids.app.android.databinding.ScoreFragmentBinding
+import games.kidsand.mimikids.app.android.screens.score.ScoreFragmentDirections.Companion.actionRestart
 import games.kidsand.mimikids.app.android.util.getViewModelFactory
 
 /**
@@ -40,22 +41,25 @@ class ScoreFragment : Fragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? =
-            ScoreFragmentBinding.inflate(inflater).apply {
-                scoreViewModel = viewModel
+    ): View? = ScoreFragmentBinding.inflate(inflater).apply {
+        scoreViewModel = viewModel
 
-                // Specify the current activity as the lifecycle owner of the binding. This is used so that
-                // the binding can observe LiveData updates
-                lifecycleOwner = viewLifecycleOwner
+        // Specify the current activity as the lifecycle owner of the binding. This is used so that
+        // the binding can observe LiveData updates
+        lifecycleOwner = viewLifecycleOwner
 
-                // Navigates back to title when button is pressed
-                viewModel.eventPlayAgain.observe(viewLifecycleOwner, { playAgain ->
-                    if (playAgain) {
-                        findNavController().navigate(ScoreFragmentDirections.actionRestart())
-                        viewModel.onPlayAgainComplete()
-                    }
-                })
-            }.root
+        observeUi()
+    }.root
+
+    private fun observeUi() {
+        // Navigates back to title when button is pressed
+        viewModel.eventPlayAgain.observe(viewLifecycleOwner, { playAgain ->
+            if (playAgain) {
+                findNavController().navigate(actionRestart(args.category))
+                viewModel.onPlayAgainComplete()
+            }
+        })
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

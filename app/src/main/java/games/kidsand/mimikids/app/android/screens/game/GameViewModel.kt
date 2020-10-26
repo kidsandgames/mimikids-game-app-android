@@ -108,6 +108,8 @@ class GameViewModel : ViewModel() {
     private val _snackbarText = MutableLiveData<Event<Int>>()
     val snackbarText: LiveData<Event<Int>> = _snackbarText
 
+    private var category: String? = null
+
     init {
         _score.value = 0
 
@@ -131,22 +133,29 @@ class GameViewModel : ViewModel() {
         loadWords()
     }
 
-    private fun loadWords() {
-        val locale = Locale.getDefault().toString()
-        GameApi.retrofitService.guess("animals", locale).enqueue(object : Callback<GuessWord> {
-            override fun onResponse(call: Call<GuessWord>, response: Response<GuessWord>) {
-                originalWords.value = response.body()?.words ?: emptyList()
-                start()
-            }
-
-            override fun onFailure(call: Call<GuessWord>, error: Throwable) {
-                Timber.e("Failure loading guess words: ${error.message}")
-                showSnackbarMessage(R.string.loading_words_error)
-            }
-        })
+    fun start(category: String) {
+        this.category = category
+        loadWords()
     }
 
-    private fun start() {
+    private fun loadWords() {
+        category?.let { category ->
+            val locale = Locale.getDefault().toString()
+            GameApi.retrofitService.guess(category, locale).enqueue(object : Callback<GuessWord> {
+                override fun onResponse(call: Call<GuessWord>, response: Response<GuessWord>) {
+                    originalWords.value = response.body()?.words ?: emptyList()
+                    startGame()
+                }
+
+                override fun onFailure(call: Call<GuessWord>, error: Throwable) {
+                    Timber.e("Failure loading guess words: ${error.message}")
+                    showSnackbarMessage(R.string.loading_words_error)
+                }
+            })
+        }
+    }
+
+    fun startGame() {
         resetList()
         nextWord()
         timer.start()

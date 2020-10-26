@@ -21,22 +21,55 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import games.kidsand.mimikids.app.android.R
 import games.kidsand.mimikids.app.android.databinding.TitleFragmentBinding
+import games.kidsand.mimikids.app.android.screens.title.TitleFragmentDirections.Companion.actionTitleToGame
 
 /**
  * Fragment for the starting or title screen of the app
  */
 class TitleFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View =
-            TitleFragmentBinding.inflate(inflater)
-                    .apply {
-                        lifecycleOwner = viewLifecycleOwner
-                        playGameButton.setOnClickListener {
-                            val actionTitleToGame = TitleFragmentDirections.actionTitleToGame()
-                            findNavController().navigate(actionTitleToGame)
+    private val titleViewModel: TitleViewModel by viewModels()
+
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View = TitleFragmentBinding.inflate(inflater)
+            .apply {
+                lifecycleOwner = viewLifecycleOwner
+                viewModel = titleViewModel
+                observeUi()
+            }.root
+
+    private fun observeUi() {
+        observeSelectCategory()
+        observeNavigateToGame()
+    }
+
+    private fun observeSelectCategory() {
+        titleViewModel.selectCategory.observe(viewLifecycleOwner) {
+            it?.let {
+                MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.select_category)
+                        .setItems(titleViewModel.categories) { _, which ->
+                            titleViewModel.onCategorySelected(which)
                         }
-                    }.root
+                        .show()
+            }
+        }
+    }
+
+    private fun observeNavigateToGame() {
+        titleViewModel.navigateToGame.observe(viewLifecycleOwner) { category ->
+            category?.let {
+                findNavController().navigate(actionTitleToGame(category))
+                titleViewModel.onGameNavigated()
+            }
+        }
+    }
 }
